@@ -3,6 +3,8 @@
 
 Provides `i-math` and `tex-math` elemets to display math equations.
 
+Live [example](https://www.lucaciucci99.com/live_examples/tex-math)
+
 ## Usage
 Anywere in your html code, for example in the `head` tag:
 ```html
@@ -41,13 +43,8 @@ If you change the content of the tag, the math display is automatically updated:
     // eq.innerHTML   = "\\int_0^1{e^{-x^{2}} \\; dx}";
 </script>
 ```
-<iframe width="80%" style="" src="./examples/index.html">
-</iframe>
 
 ### Importing as module:
 ```typescript
-import { TexMath }  from "tex-math"
-
-// you can access the classes like this:
-tex_math.
+import { TexMath, IMath, setupStyles } from "tex-math/lib/tex-math"
 ```

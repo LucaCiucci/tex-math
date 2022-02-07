@@ -1,7 +1,13 @@
 {
   "name": "tex-math",
-  "version": "1.1.0",
+  "version": "1.1.2",
   "description": "provides <tex-math> and <i-math> elements to write latex equations inside html",
+  "homepage": "https://github.com/LucaCiucci/tex-math#readme",
+  "bugs": {
+    "url" : "https://github.com/LucaCiucci/tex-math/issues",
+    "email" : "develop@lucaciucci99.com"
+  },
+  "repository": "github:LucaCiucci/tex-math",
   "main": "./src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -24,7 +30,8 @@
     "i-math"
   ],
   "author": {
-    "name": "Luca Ciucci"
+    "name": "Luca Ciucci",
+    "email" : "develop@lucaciucci99.com"
   },
   "license": "MIT",
   "dependencies": {
