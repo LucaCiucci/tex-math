@@ -9,7 +9,7 @@ Live [example](https://www.lucaciucci99.com/live_examples/tex-math)
 Anywere in your html code, for example in the `head` tag:
 ```html
 <!-- load the script as async, this is not necessary but may speed up page rendering, remove 'async' if you need to access the elements instantly -->
-<script async src="https://cdn.jsdelivr.net/npm/tex-math/dist/tex-math.js"></script>
+<script async src="https://cdn.jsdelivr.net/npm/tex-math@latest/dist/tex-math.js"></script>
 ```
 and then you can use `i-math` and `tex-math` tags to write math:
 ```html
