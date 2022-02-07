@@ -30,7 +30,7 @@
 		"downlevelIteration": true,
 		"declaration": true,
 
-		"pretty": true
+		"pretty": true,
 	},
 	"include": [
 		"typings/**/*",

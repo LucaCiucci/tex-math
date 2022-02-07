@@ -6,19 +6,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 
-    <script src="../dist/tex-math.js"></script>
+    <!--script src="../dist/tex-math.js"></script-->
+    <script src="https://cdn.jsdelivr.net/npm/tex-math/dist/tex-math.js"></script>
 </head>
 <body>
     
 
-    Inline equation example: <i-math>x^y</i-math>
+    Inline equation example: <i-math>x^y</i-math><br>
 
     Equation:
     <tex-math>
         i \hbar \frac{\partial}{\partial t} \psi = H \psi
     </tex-math>
 
+    <tex-math id="equation">
+        i \hbar \frac{\partial}{\partial t} \psi = H \psi
+    </tex-math>
+
+    <tex-math id="timed">
+        x
+    </tex-math>
+
     <script>
+        eq = document.getElementById("equation");
+        console.log("old tex: ", eq.tex);
+        eq.tex = "\\int_0^1{e^{-x^{2}} \\; dx}";
+
+        // animation
+        let equations = [
+        "i = \\sqrt{-1}",
+        "\\frac{d}{dx} \\int_a^x f(t) \\, dt = f(x)",
+        "G_{\\mu, \\nu} = \\frac{8\\pi G}{c^4}T_{\\mu, \\nu}",
+        "e^{i\\pi} + 1 = 0",
+        "\\braket{\\psi_1 | \\psi_2} = \\int \\psi_1^{*}(x) \\psi_2(x) \\, dx",
+        "i \\hbar \\frac{\\partial}{\\partial t} \\psi = H \\psi"
+        ];
+        let equations_index = 0;
+        setInterval(function() {
+            let e = document.getElementById("timed");
+            if (e) {
+                e.textContent = equations[equations_index % equations.length];
+                ++equations_index;
+            }
+        }, 1000);
     </script>
 </body>
 </html>

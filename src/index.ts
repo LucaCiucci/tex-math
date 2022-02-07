@@ -3,46 +3,60 @@
 // uncomment this line instead of the above before compiling, use the above for intellisense type support
 const katex = require('katex');
 
-import katex_css from "../node_modules/katex/dist/katex.min.css"
-
+import katex_css_ulr from "../node_modules/katex/dist/katex.min.css"
 
 export abstract class TexMathBase extends HTMLElement {
 
 	private m_tex : string = "";
-	private block : boolean = false;
+	private blockDisplay : boolean = false;
 	private m_slot? : HTMLSlotElement;
 	private m_display? : HTMLElement;
 
 	get tex() : string {
 		return this.m_tex;
 	}
+	set tex(_tex : string) {
+		this.textContent = _tex;
+	}
 
-	constructor(block : boolean) {
+	constructor(blockDisplay : boolean) {
 		super();
-		this.block = block;
-		console.log(this.innerHTML);
+
+		// store display mode
+		this.blockDisplay = blockDisplay;
 
 		// Create a shadowRoot to display the content
-		const shadowRoot = this.attachShadow({mode: 'open'});
+		const shadowRoot = this.attachShadow({ mode: 'open' });
 
 		shadowRoot.innerHTML =
-		// style (katex css)
-		"<style>" + katex_css + "</style>" +
-		// hidden slot
-		'<slot style="display:none;"></slot>' +
-		// katex display
-		'<span style="color:red;"></span>';
-		console.log("shadow content: ", shadowRoot.innerHTML);
+		// style (katex css), we have to insert the stylesheet here since the shadowRoot cannot inherit styles
+		`<link rel="stylesheet" href="` + katex_css_ulr + `">` +
+		// hidden slot, just to receive the content
+		'<slot id="src" style="display:none;"></slot>' +
+		// katex math display here
+		'<span id="display"></span>';
 
-		this.m_slot = shadowRoot.querySelectorAll('slot')[0];
-		this.m_display = shadowRoot.querySelectorAll('span')[0];
+		// find the slot
+		this.m_slot = shadowRoot.querySelectorAll('#src')[0] as HTMLSlotElement;
+
+		// find the display element
+		this.m_display = shadowRoot.querySelectorAll('#display')[0] as HTMLElement;
+
+		// add an event listener to the slot in order to change the 
 		let _this_ = this;
-		this.m_slot.addEventListener('slotchange', function(e : Event) {
+		let slot = this.m_slot;
+		this.m_slot.addEventListener('slotchange', function({/* unused event parameter */} : Event) {
 			_this_.render();
-			e;
-		});
-		console.log(this.m_slot);
 
+			// listen for nodes changes
+			// https://stackoverflow.com/questions/47378194/fire-a-function-when-innerhtml-of-element-changes
+			let nodes = slot.assignedNodes();
+			for (let node of nodes) {
+				node.addEventListener('DOMSubtreeModified', function() {
+					_this_.render();
+				});
+			}
+		});
 	}
 
 	render() {
@@ -58,17 +72,26 @@ export abstract class TexMathBase extends HTMLElement {
 		// save tex
 		this.m_tex = tex;
 
-		console.log("tex: ", tex);
-
 		// render using katex
 		katex.render(tex, this.m_display, {
-			displayMode: this.block,
+			displayMode: this.blockDisplay,
+			//display: this.blockDisplay,
 			output: "html"
 		});
 	}
 
 }
 
+// inline math element
+export class IMath extends TexMathBase {
+	constructor() {
+		super(false);
+	}
+}
+if (!customElements.get('i-math'))
+	customElements.define('i-math', IMath);
+
+// math display element
 export class TexMath extends TexMathBase {
 	constructor() {
 		super(true);
@@ -77,10 +100,10 @@ export class TexMath extends TexMathBase {
 if (!customElements.get('tex-math'))
 	customElements.define('tex-math', TexMath);
 
-export class IMath extends TexMathBase {
-	constructor() {
-		super(false);
-	}
-}
-if (!customElements.get('i-math'))
-	customElements.define('i-math', IMath);
+
+// katex requires some fonts that have to be loaded outside
+// the shadowRoot since styles inside shadowRoot cannot load fonts
+let style_sheet = document.createElement("link");
+style_sheet.setAttribute('rel', "stylesheet");
+style_sheet.setAttribute('href', katex_css_ulr);
+document.head.append(style_sheet);

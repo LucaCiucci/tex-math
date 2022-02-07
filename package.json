@@ -1,14 +1,20 @@
 {
   "name": "tex-math",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "provides <tex-math> and <i-math> elements to write latex equations inside html",
-  "main": "./lib/index.js",
+  "main": "./src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "compile": "tsc",
     "build": "npm run compile && webpack",
     "lint": "tslint -c tslint.json src/**/*.ts",
-    "prepublish": "npm run build"
+    "prepublish": "npm run build",
+    "webpack-watch": "npx webpack --watch"
+  },
+  "scriptsComments" : {
+    "compile": "compiles typescript, you may not need to run this alone",
+    "build": "builds the lib and the dist",
+    "webpack-watch": "starts webpack in watch mode, used in development"
   },
   "keywords": [
     "latex",
@@ -28,6 +34,7 @@
     "typescript": "^4.5.5"
   },
   "devDependencies": {
+    "copy-webpack-plugin": "^10.2.4",
     "css-loader": "^6.6.0",
     "css-modules-typescript-loader": "latest",
     "file-loader": "latest",
@@ -40,8 +47,17 @@
     "webpack-cli": "latest"
   },
   "files": [
-    "./bin/*",
-    "./lib/*"
+    "lib/*",
+    "dist/*",
+    "src/*",
+    "examples/*",
+    "tsconfig.json",
+    "tslint.json",
+    "webpack.config.js",
+    "readma.md",
+    "package.json",
+    ".editorconfig",
+    ".gitignore"
   ],
   "typings": "./lib/index.d.ts"
 }

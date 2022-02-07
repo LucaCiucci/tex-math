@@ -1,11 +1,13 @@
 const path = require('path');
 const TypescriptDeclarationPlugin = require('typescript-declaration-webpack-plugin');
+const CopyPlugin = require("copy-webpack-plugin");
 
 // see https://github.com/TypeStrong/ts-loader for explanation
 
 module.exports = {
-  mode: "development",
-  devtool: "inline-source-map",
+  //mode: "development",
+  mode: "production",
+  //devtool: "inline-source-map",
   entry: './src/index.ts',
   output: {
     filename: 'tex-math.js',
@@ -49,7 +51,7 @@ module.exports = {
             {
               loader: "css-loader",
               options: {
-                sourceMap: true
+                //sourceMap: true
               }
             }
           ],
@@ -58,16 +60,42 @@ module.exports = {
           test: /\.css$/,
           use: [
             {
-              loader: "raw-loader"
+              //loader: "raw-loader"
+              loader: "file-loader"
             }
           ]
-        }
+        },
+        /*{
+          test: /\.css$/,
+          use: [
+            {
+              loader: "css-to-string-loader"
+            }
+          ]
+        },*/
+        /*{
+          test: /\.css$/,
+          use: [
+            {
+              loader:'typings-for-css-modules-loader',
+              options: {
+                modules:true,
+                namedExport: true,
+              }
+            }
+          ]
+        },*/
     ]
   },
   //watch : true,
   plugins: [
     new TypescriptDeclarationPlugin({
       out: "tex-math.d.ts"
-    })
+    }),
+    new CopyPlugin({
+      patterns: [
+        { from: "./node_modules/katex/dist/fonts", to: "fonts" }
+      ],
+    }),
   ]
 };

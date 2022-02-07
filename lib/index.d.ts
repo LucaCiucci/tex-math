@@ -4,6 +4,7 @@ export declare abstract class TexMathBase extends HTMLElement {
     private m_slot?;
     private m_display?;
     get tex(): string;
+    set tex(_tex: string);
     constructor(block: boolean);
     render(): void;
 }
