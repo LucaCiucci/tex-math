@@ -48,3 +48,21 @@ If you change the content of the tag, the math display is automatically updated:
 ```typescript
 import { TexMath, IMath, setupStyles } from "tex-math/lib/tex-math"
 ```
+
+## Features
+ - [x] inline equation
+ - [x] math sidpaly equations
+ - [x] authomatic update
+ - [ ] LaTeX code "copy to clipboard"
+ - [ ] equation numbering and some `eq-ref` tag with async number deduction for external pages
+
+legend:
+ - [x] OK
+ - [ ] to implement
+
+
+## How does it work
+TODO
+
+## TODOs
+ - improve node's import
