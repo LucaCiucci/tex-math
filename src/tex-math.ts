@@ -34,7 +34,7 @@ export abstract class TexMathBase extends HTMLElement {
 		// hidden slot, just to receive the content
 		'<slot id="src" style="display:none;"></slot>' +
 		// katex math display here
-		'<span id="display"></span>';
+		'<span id="display" style="overflow-x:auto"></span>';
 
 		// find the slot
 		this.m_slot = shadowRoot.querySelectorAll('#src')[0] as HTMLSlotElement;
