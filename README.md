@@ -55,6 +55,9 @@ import { TexMath, IMath, setupStyles } from "tex-math/lib/tex-math"
  - [x] authomatic update
  - [ ] LaTeX code "copy to clipboard"
  - [ ] equation numbering and some `eq-ref` tag with async number deduction for external pages
+ - [ ] custom elements style (dispaly block)
+ - [ ] error recovery?
+ - [ ] equation editor
 
 legend:
  - [x] OK

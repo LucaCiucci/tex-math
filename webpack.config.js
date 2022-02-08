@@ -5,8 +5,8 @@ const CopyPlugin = require("copy-webpack-plugin");
 // see https://github.com/TypeStrong/ts-loader for explanation
 
 module.exports = {
-  //mode: "development",
-  mode: "production",
+  mode: "development",
+  //mode: "production",
   //devtool: "inline-source-map",
   entry: './src/index.ts',
   output: {

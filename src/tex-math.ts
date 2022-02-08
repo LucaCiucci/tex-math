@@ -73,11 +73,17 @@ export abstract class TexMathBase extends HTMLElement {
 		this.m_tex = tex;
 
 		// render using katex
-		katex.render(tex, this.m_display, {
-			displayMode: this.blockDisplay,
-			//display: this.blockDisplay,
-			output: "html"
-		});
+		if (this.m_display) {
+			try {
+				katex.render(tex, this.m_display, {
+					displayMode: this.blockDisplay,
+					//display: this.blockDisplay,
+					output: "html"
+				});
+			} catch (error) {
+				this.m_display.innerHTML = '<span style="color:red;">' + error + "</span>";
+			}
+		}
 	}
 
 }
