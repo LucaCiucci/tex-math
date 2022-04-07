@@ -12,6 +12,7 @@ export abstract class TexMathBase extends HTMLElement {
 	private m_slot? : HTMLSlotElement;
 	private m_display? : HTMLElement;
 	private m_number : HTMLElement;
+	private m_container : HTMLElement;
 	private number : number = -1;
 
 	static equation_counter = 0;
@@ -48,13 +49,14 @@ export abstract class TexMathBase extends HTMLElement {
 
 		// find the container element
 		let container = shadowRoot.querySelectorAll('#container')[0] as HTMLElement;
+		this.m_container = container;
 
 		// find the number element
 		this.m_number = shadowRoot.querySelectorAll('#number')[0] as HTMLElement;
 		this.m_number.style.display = "none";
 
 		{
-			container.style.display = "flex";
+			container.style.display = "inline";
 			container.style.alignContent = "center";
 			this.m_display.style.flexGrow = "1";
 			this.m_number.style.display = "none";
@@ -128,6 +130,7 @@ export abstract class TexMathBase extends HTMLElement {
 			this.m_number.innerHTML = "(" + this.number.toString() + ")";
 			this.m_number.innerHTML = "<div style=\"position:absolute; top:50%; right:0; transform: translate(-0.5em, -50%);\">(" + this.number.toString() + ")</div>";
 			this.m_number.style.display = "block";
+			this.m_container.style.display = "flex";
 		}
 		
 		this.render();
