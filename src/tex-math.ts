@@ -122,7 +122,7 @@ export abstract class TexMathBase extends HTMLElement {
 	}
 
 	connectedCallback() {
-		if (this.number < 0 && (this.hasAttribute('number') || this.hasAttribute('n'))) {
+		if (this.number < 0 && (this.hasAttribute('id') || this.hasAttribute('number') || this.hasAttribute('n'))) {
 			this.number = ++TexMathBase.equation_counter;
 		}
 		

@@ -1,6 +1,6 @@
 {
   "name": "tex-math",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "provides <tex-math> and <i-math> elements to write latex equations inside html",
   "homepage": "https://github.com/LucaCiucci/tex-math#readme",
   "bugs": {
