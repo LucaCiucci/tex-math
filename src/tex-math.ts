@@ -11,6 +11,10 @@ export abstract class TexMathBase extends HTMLElement {
 	private blockDisplay : boolean = false;
 	private m_slot? : HTMLSlotElement;
 	private m_display? : HTMLElement;
+	private m_number : HTMLElement;
+	private number : number = -1;
+
+	static equation_counter = 0;
 
 	get tex() : string {
 		return this.m_tex;
@@ -34,13 +38,30 @@ export abstract class TexMathBase extends HTMLElement {
 		// hidden slot, just to receive the content
 		'<slot id="src" style="display:none;"></slot>' +
 		// katex math display here
-		'<span id="display" style="overflow-x:auto"></span>';
+		'<span id="container"><span id="display" style="overflow-x:auto"></span><div id="number"></div></span>';
 
 		// find the slot
 		this.m_slot = shadowRoot.querySelectorAll('#src')[0] as HTMLSlotElement;
 
 		// find the display element
 		this.m_display = shadowRoot.querySelectorAll('#display')[0] as HTMLElement;
+
+		// find the container element
+		let container = shadowRoot.querySelectorAll('#container')[0] as HTMLElement;
+
+		// find the number element
+		this.m_number = shadowRoot.querySelectorAll('#number')[0] as HTMLElement;
+		this.m_number.style.display = "none";
+
+		{
+			container.style.display = "flex";
+			container.style.alignContent = "center";
+			this.m_display.style.flexGrow = "1";
+			this.m_number.style.display = "none";
+			this.m_number.style.flexGrow = "0";
+			this.m_number.style.width = "4em";
+			this.m_number.style.position = "relative";
+		}
 
 		// add an event listener to the slot in order to change the 
 		let _this_ = this;
@@ -86,6 +107,31 @@ export abstract class TexMathBase extends HTMLElement {
 		}
 	}
 
+	createLinkPreview(preview : HTMLElement) : void {
+		let eq = document.createElement('tex-math') as TexMathBase;
+		eq.tex = this.tex;
+		preview.appendChild(eq);
+	}
+
+	refDisplay() : HTMLElement {
+		let number = document.createElement('span');
+		number.innerHTML = this.number.toString();
+		return number
+	}
+
+	connectedCallback() {
+		if (this.number < 0 && (this.hasAttribute('number') || this.hasAttribute('n'))) {
+			this.number = ++TexMathBase.equation_counter;
+		}
+		
+		if (this.number > 0) {
+			this.m_number.innerHTML = "(" + this.number.toString() + ")";
+			this.m_number.innerHTML = "<div style=\"position:absolute; top:50%; right:0; transform: translate(-0.5em, -50%);\">(" + this.number.toString() + ")</div>";
+			this.m_number.style.display = "block";
+		}
+		
+		this.render();
+	}
 }
 
 // inline math element
