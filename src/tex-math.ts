@@ -106,6 +106,52 @@ export class TexMath extends TexMathBase {
 if (!customElements.get('tex-math'))
 	customElements.define('tex-math', TexMath);
 
+export class TexEditor extends HTMLElement {
+	constructor() {
+		super();
+
+		const shadowRoot = this.attachShadow({ mode : "open" });
+
+		let div = document.createElement("div");
+		div.style.height = "15em";
+		div.style.width = "100%";
+		div.style.display = "flex";
+		div.style.flexDirection = "row";
+		shadowRoot.append(div);
+
+		let editor = document.createElement("div");
+		editor.style.padding = "0.5em";
+		editor.style.background = "rgb(30, 30, 30)";
+		editor.style.color = "rgb(200, 200, 200)";
+		editor.style.border = "solid 1px gray"
+		editor.contentEditable = "true";
+		editor.innerText = "x";
+		editor.style.width = "100%";
+		editor.style.overflow = "auto";
+		editor.style.borderRadius = "0.5em";
+		editor.style.overflow = "hidden";
+		editor.style.flexBasis = "2";
+
+		let preview = document.createElement('tex-math') as TexMath;
+		preview.style.width = "100%";
+		//preview.style.border = "solid 1px gray"
+		preview.style.flexBasis = "1";
+		preview.style.overflow = "auto";
+		div.append(editor);
+		div.append(preview);
+
+		// https://stackoverflow.com/questions/1391278/contenteditable-change-events
+		editor.addEventListener("input", function({} : Event) {
+			preview.tex = editor.innerText;
+		});
+	}
+
+	connectedCallback() {
+		this.innerHTML = "";
+	}
+}
+if (!customElements.get('tex-editor'))
+	customElements.define('tex-editor', TexEditor);
 export function setupStyles(element? : HTMLElement) {
 
 	if (!element) {
