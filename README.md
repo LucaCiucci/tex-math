@@ -4,7 +4,7 @@
 Provides `i-math` and `tex-math` elemets to display math equations.
 
 <!-- see https://stackoverflow.com/questions/6551446/can-i-run-html-files-directly-from-github-instead-of-just-viewing-their-source -->
-Live [example](https://raw.githack.com/lucaciucci/tex-math/main/examples/live_example.html)
+Live [example](https://raw.githack.com/lucaciucci/tex-math/main/examples/index.html)
 
 ## Usage
 Anywere in your html code, for example in the `head` tag:
@@ -55,19 +55,7 @@ If you change the content of the tag, the math display is automatically updated:
 ```
 
 ### Equation numbering
-if you want to display equation numbers, you can load the [lc-ref](https://www.npmjs.com/package/lc-ref) package:
-```html
-<script async src="https://cdn.jsdelivr.net/npm/lc-ref@0.1.0/dist/lc-ref.js"></script>
-<script>
-    window.onload = function() {
-        if (lc_ref) {
-            // set the equation numbers using the [lc-ref](https://www.npmjs.com/package/lc-ref) package
-            lc_ref.enumerate();
-        }
-    }
-</script>
-```
-and then you can use set one of the following attributes to display the equations numbers:
+if you want to display equation numbers, you can load the [lc-ref](https://www.npmjs.com/package/lc-ref) package and then you can set one of the following attributes to display the equations numbers:
  - `id`
  - `n`
  - `number`

@@ -1,7 +1,8 @@
 
 //import * as katex from 'katex'
+import katex from "katex";
 // uncomment this line instead of the above before compiling, use the above for intellisense type support
-const katex = require('katex');
+//const katex = require('katex');
 
 import katex_css_ulr from "../node_modules/katex/dist/katex.min.css"
 import basic_css_url from "./basic.css"
@@ -160,20 +161,12 @@ export abstract class TexMathBase extends HTMLElement {
 			tex += node.textContent;
 		}
 
-		// TODO remove indentation to make the tex more readable
-		// example:
-		//   	\begin{align}
-		//   		\frac{1}{2} &= \frac{1}{2} \\
-		//   		\frac{1}{2} &= \frac{1}{2} \\
-		//   	\end{align}
-		// becomes
-		// \begin{align}
-		// 	\frac{1}{2} &= \frac{1}{2} \\
-		// 	\frac{1}{2} &= \frac{1}{2} \\
-		// \end{align}
+		tex = TexMathBase.fix_indentation(tex);
 
 		// save tex
 		this.m_tex = tex;
+
+		let my_tag = "texMathInnerSlot";
 
 		// render using katex
 		if (this.m_display) {
@@ -181,8 +174,45 @@ export abstract class TexMathBase extends HTMLElement {
 				katex.render(tex, this.m_display, {
 					displayMode: this.blockDisplay,
 					//display: this.blockDisplay,
-					output: "html"
+					output: "html",
+					//trust: true,
+					macros : {
+						"\\slot" : "\\text{" + my_tag + "\\{#1\\}}",
+					}
 				});
+
+				while (true) {
+					let html = this.m_display.innerHTML;
+
+					let my_tag_index = html.indexOf(my_tag);
+
+					// if not found, finished
+					if (my_tag_index < 0) { break; }
+
+					let open_paren_index = html.indexOf("{", my_tag_index);
+					let close_paren_index = html.indexOf("}", open_paren_index);
+
+					if (open_paren_index < 0 || close_paren_index < 0) {
+						console.error(my_tag + ": missing { or }");
+						break;
+					}
+					
+					if (open_paren_index > close_paren_index) {
+						console.error(my_tag + ": { is after }");
+						break;
+					}
+
+					let slot_id = html.substring(open_paren_index + 1, close_paren_index);
+
+					let slot = document.createElement("slot");
+					slot.name = slot_id;
+					let span = document.createElement("span");
+					slot.appendChild(span);
+					span.style.color = "red";
+					span.innerText = "#" + slot_id;
+
+					this.m_display.innerHTML = html.substring(0, my_tag_index) + slot.outerHTML + html.substring(close_paren_index + 1);
+				}
 			} catch (error) {
 				this.m_display.innerHTML = '<span style="color:red; padding-left: 1em; padding-right: 1em;">' + error + "</span>";
 			}
@@ -300,6 +330,47 @@ export abstract class TexMathBase extends HTMLElement {
 		if (typeof lc_ref != 'undefined') {
 			lc_ref.renumerate();
 		}
+	}
+	
+	private static fix_indentation(html : string) : string {
+		// We start by removing all the white characters from the first line,
+		// the other lines will be indented by the same amount as the first line
+
+		let indentation_characters = " \t";
+
+		function indentation_size(line : string) : number {
+			// NOTE: we assume that indentation is all white characters or tabs
+			// otherwise this methow would not work
+
+			let i = 0;
+			while (i < line.length && indentation_characters.indexOf(line[i]) >= 0) { ++i; }
+
+			return i;
+		}
+
+		let lines = html.split("\n");
+		let fixed_lines : string[] = [];
+		
+		let first_line_found = false;
+		let indentation_size_first_line = 0;
+		for (let i = 0; i < lines.length; ++i) {
+			let line = lines[i];
+			let indent = indentation_size(line);
+
+			if (!first_line_found) {
+				if (indent < line.length) {
+					first_line_found = true;
+					indentation_size_first_line = indentation_size(line);
+				}
+			}
+
+			if (first_line_found) {
+				fixed_lines.push(line.slice(Math.min(indent, indentation_size_first_line)));
+			}
+		}
+
+		// now we join the lines and return the result
+		return fixed_lines.join("\n");
 	}
 }
 
