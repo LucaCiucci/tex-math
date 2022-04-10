@@ -3,13 +3,14 @@
 
 Provides `i-math` and `tex-math` elemets to display math equations.
 
-Live [example](https://www.lucaciucci99.com/live_examples/tex-math)
+<!-- see https://stackoverflow.com/questions/6551446/can-i-run-html-files-directly-from-github-instead-of-just-viewing-their-source -->
+Live [example](https://raw.githack.com/lucaciucci/tex-math/main/examples/live_example.html)
 
 ## Usage
 Anywere in your html code, for example in the `head` tag:
 ```html
 <!-- load the script as async, this is not necessary but may speed up page rendering, remove 'async' if you need to access the elements instantly -->
-<script async src="https://cdn.jsdelivr.net/npm/tex-math@latest/dist/tex-math.js"></script>
+<script async src="https://cdn.jsdelivr.net/npm/tex-math@1.3.0/dist/tex-math.js"></script>
 ```
 and then you can use `i-math` and `tex-math` tags to write math:
 ```html
@@ -44,6 +45,59 @@ If you change the content of the tag, the math display is automatically updated:
 </script>
 ```
 
+### Styling
+`tex-math.js` loads a basic stylesheed to correctly display the elements and allowing proper styling. It is advised to add a `<style>` tag to your html code to allow a nice rendering even before the script is loaded (unnecessary if the script is loaded without the `async` attribute):
+```html
+<style>
+    i-math { display: inline-block; }
+    tex-math { display: block; }
+</style>
+```
+
+### Equation numbering
+if you want to display equation numbers, you can load the [lc-ref](https://www.npmjs.com/package/lc-ref) package:
+```html
+<script async src="https://cdn.jsdelivr.net/npm/lc-ref@0.1.0/dist/lc-ref.js"></script>
+<script>
+    window.onload = function() {
+        if (lc_ref) {
+            // set the equation numbers using the [lc-ref](https://www.npmjs.com/package/lc-ref) package
+            lc_ref.enumerate();
+        }
+    }
+</script>
+```
+and then you can use set one of the following attributes to display the equations numbers:
+ - `id`
+ - `n`
+ - `number`
+for example:
+```html
+<tex-math id="equation">
+    x^2
+</tex-math>
+or...
+<tex-math n>
+    x^2
+</tex-math>
+or...
+<tex-math number>
+    x^2
+</tex-math>
+```
+
+### Referencing equations:
+you can use the [lc-ref](https://www.npmjs.com/package/lc-ref) package to reference equations:
+```html
+<lc-ref ref="equation">eq. </lc-ref>
+or...
+<lc-ref href="#equation">eq. </lc-ref>
+or...
+<lc-ref href="./other_document.html#equation">eq. </lc-ref>
+```
+authomatic preview will be displayed on hover:  
+![hover preview](./docs/img/hover_preview.png)
+
 ### Importing as module:
 ```typescript
 import { TexMath, IMath, setupStyles } from "tex-math/lib/tex-math"
@@ -54,8 +108,7 @@ import { TexMath, IMath, setupStyles } from "tex-math/lib/tex-math"
  - [x] math sidpaly equations
  - [x] authomatic update
  - [ ] LaTeX code "copy to clipboard"
- - [ ] equation numbering and some `eq-ref` tag with async number deduction for external pages
- - [ ] custom elements style (dispaly block)
+ - [x] equation numbering using the [lc-ref](https://www.npmjs.com/package/lc-ref) package
  - [ ] error recovery?
  - [ ] equation editor
 

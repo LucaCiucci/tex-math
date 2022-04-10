@@ -7,7 +7,28 @@
     <title>Document</title>
 
     <script src="../dist/tex-math.js"></script>
-    <!--script async src="https://cdn.jsdelivr.net/npm/tex-math@latest/dist/tex-math.js"></script-->
+    <!--script async src="https://cdn.jsdelivr.net/npm/tex-math@1.3.0/dist/tex-math.js"></script-->
+
+    <style>
+        /*
+        `tex-math.js` will automatically set this style, but it is advised
+        to add this lines if you load the script as `async` so that the document is displayed nicely even before
+        the math rendering
+        */
+        i-math { display: inline-block; }
+        tex-math { display: block; }
+    </style>
+
+    <!-- see [lc-ref](https://www.npmjs.com/package/lc-ref) -->
+    <script async src="https://cdn.jsdelivr.net/npm/lc-ref@0.1.0/dist/lc-ref.js"></script>
+    <script>
+        window.onload = function() {
+            if (lc_ref) {
+                // set the equation numbers using the [lc-ref](https://www.npmjs.com/package/lc-ref) package
+                lc_ref.enumerate();
+            }
+        }
+    </script>
 </head>
 <body>
     
@@ -15,13 +36,16 @@
     Inline equation example: <i-math>x^y</i-math><br>
 
     Equation:
-    <tex-math>
+    <tex-math n>
         i \hbar \frac{\partial}{\partial t} \psi = H \psi
     </tex-math>
 
     <tex-math id="equation">
         i \hbar \frac{\partial}{\partial t} \psi = H \psi
     </tex-math>
+
+    You can refer the <lc-ref ref="equation">eq. </lc-ref> using the <a href="https://example.com">lc-ref package</a>.<br>
+    Try to hover the link <lc-ref ref="equation">eq. </lc-ref> to see a preview.
 
     <tex-math id="timed">
         x

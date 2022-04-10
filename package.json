@@ -1,6 +1,6 @@
 {
   "name": "tex-math",
-  "version": "1.2.2",
+  "version": "1.3.0",
   "description": "provides <tex-math> and <i-math> elements to write latex equations inside html",
   "homepage": "https://github.com/LucaCiucci/tex-math#readme",
   "bugs": {
@@ -24,10 +24,13 @@
   },
   "keywords": [
     "latex",
+    "equations",
     "katex",
     "html",
     "tex-math",
-    "i-math"
+    "i-math",
+    "webcomponent",
+    "webcomponents"
   ],
   "author": {
     "name": "Luca Ciucci",
@@ -61,7 +64,7 @@
     "tsconfig.json",
     "tslint.json",
     "webpack.config.js",
-    "readma.md",
+    "readme.md",
     "package.json",
     ".editorconfig",
     ".gitignore"
