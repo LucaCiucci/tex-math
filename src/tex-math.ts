@@ -284,7 +284,11 @@ export abstract class TexMathBase extends HTMLElement {
 
 		// hide the number and set the container display to block so that the number is not visible
 		this.m_number!.style.display = "none";
-		this.m_container!.style.display = "inline-block";
+		if (this.blockDisplay) {
+			this.m_container!.style.display = "block";
+		} else {
+			this.m_container!.style.display = "inline";
+		}
 	}
 
 	/**
