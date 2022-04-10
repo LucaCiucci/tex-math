@@ -59,9 +59,7 @@ export abstract class TexMathBase extends HTMLElement {
 
 		// store display mode
 		this.blockDisplay = blockDisplay;
-	}
 
-	connectedCallback() {
 		// Create a shadowRoot to display the content
 		const shadowRoot = this.attachShadow({ mode: 'open' });
 
@@ -96,11 +94,13 @@ export abstract class TexMathBase extends HTMLElement {
 			this.m_number.style.width = "4em";
 			this.m_number.style.position = "relative";
 		}
+	}
 
+	connectedCallback() {
 		// add an event listener to the slot in order to change the 
 		let _this_ = this;
-		let slot = this.m_slot;
-		this.m_slot.addEventListener('slotchange', function({/* unused event parameter */} : Event) {
+		let slot = this.m_slot!;
+		this.m_slot!.addEventListener('slotchange', function({/* unused event parameter */} : Event) {
 			_this_.render();
 
 			// listen for nodes changes
