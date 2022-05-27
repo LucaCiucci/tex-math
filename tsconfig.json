@@ -5,7 +5,8 @@
 		"moduleResolution": "node",
 		"lib": [
 			"es6",
-			"DOM"
+			"DOM",
+			"ES2021.String"
 		],
 
 		"rootDir": "src",

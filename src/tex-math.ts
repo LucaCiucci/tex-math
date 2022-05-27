@@ -12,8 +12,8 @@ import basic_css_url from "./basic.css"
 let css = document.createElement('link');
 css.rel = 'stylesheet';
 css.href = basic_css_url;
-document.head.appendChild(css);
-console.log("css:", basic_css_url)
+//document.head.appendChild(css);
+//console.log("css:", basic_css_url)
 
 // lc-ref compatibility
 /**
@@ -99,6 +99,7 @@ export abstract class TexMathBase extends HTMLElement {
 
 	connectedCallback() {
 		// add an event listener to the slot in order to change the 
+		// see https://stackoverflow.com/a/54355963
 		let _this_ = this;
 		let slot = this.m_slot!;
 		this.m_slot!.addEventListener('slotchange', function({/* unused event parameter */} : Event) {
@@ -408,6 +409,7 @@ if (!customElements.get('tex-math'))
 	customElements.define('tex-math', TexMath);
 
 export class TexEditor extends HTMLElement {
+	private editor? : HTMLElement;
 	constructor() {
 		super();
 
@@ -420,7 +422,12 @@ export class TexEditor extends HTMLElement {
 		div.style.flexDirection = "row";
 		shadowRoot.append(div);
 
+		let slot = document.createElement("slot");
+		slot.style.display = "none";
+		shadowRoot.appendChild(slot);
+
 		let editor = document.createElement("div");
+		this.editor = editor;
 		editor.style.padding = "0.5em";
 		editor.style.background = "rgb(30, 30, 30)";
 		editor.style.color = "rgb(200, 200, 200)";
@@ -445,18 +452,53 @@ export class TexEditor extends HTMLElement {
 		editor.addEventListener("input", function({} : Event) {
 			preview.tex = editor.innerText;
 		});
+
+		// default content:
+		let _this_ = this;
+		let default_content_listener = function({} : Event) : void {
+			let default_content = "";
+			for (let node of slot.assignedNodes()) {
+				default_content += node.textContent;
+			}
+			default_content = _this_.innerHTML;
+			console.log(default_content);
+			
+			// https://stackoverflow.com/questions/63616486/property-replaceall-does-not-exist-on-type-string
+			//default_content = default_content.trim().replaceAll("\n", "<br>").replace(/\s/g, " ");
+			default_content = default_content.trim().replaceAll("\n", "<br>");
+			console.log(default_content);
+			editor.innerHTML = default_content;
+			preview.innerHTML = default_content;
+			slot.removeEventListener('slotchange', default_content_listener);
+		};
+		slot.addEventListener('slotchange', default_content_listener);
 	}
 
 	connectedCallback() {
-		this.innerHTML = "";
+		//this.innerHTML = "";
+		console.log("connected", this.innerHTML);
+		this.editor!.innerText = this.innerHTML;
 	}
 }
 if (!customElements.get('tex-editor'))
 	customElements.define('tex-editor', TexEditor);
-export function setupStyles(element? : HTMLElement) {
+export function setupStyles(element? : Element) {
 
 	if (!element) {
 		element = document.head;
+	}
+
+	if (!element) {
+		let root = document.getRootNode().firstChild;
+		
+		// if we are in a svg element, we need to find the root svg element
+		if (root instanceof SVGSVGElement) {
+			element = root;
+		}
+	}
+
+	if (!element) {
+		return;
 	}
 
 	// katex requires some fonts that have to be loaded outside
@@ -465,4 +507,6 @@ export function setupStyles(element? : HTMLElement) {
 	style_sheet.setAttribute('rel', "stylesheet");
 	style_sheet.setAttribute('href', katex_css_ulr);
 	element.append(style_sheet);
+
+	element.appendChild(css);
 }
